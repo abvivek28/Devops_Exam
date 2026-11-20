@@ -12,7 +12,7 @@ class TestMetricsExporter(unittest.TestCase):
     def test_cpu_metric_exists(self):
         metrics = get_metrics()
 
-        self.assertIn("45.5", metrics)
+        self.assertIn("99.9", metrics)
 
 if __name__ == "__main__":
     unittest.main()
