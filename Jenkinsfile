@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -6,7 +7,6 @@ pipeline {
     }
 
     stages {
-
         stage('Checkout') {
             steps {
                 checkout scm
@@ -17,14 +17,14 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Installing Python dependencies'
-                bat 'python -m pip install -r requirements.txt'
+                sh 'python3 -m pip install -r requirements.txt'
             }
         }
 
         stage('Test') {
             steps {
                 echo 'Running automated tests'
-                bat 'python -m unittest discover -s tests -v'
+                sh 'python3 -m unittest discover -s tests -v'
             }
         }
 
@@ -32,13 +32,13 @@ pipeline {
             steps {
                 echo 'Creating deployment package'
 
-                bat '''
-                    if not exist deployment mkdir deployment
-                    copy /Y metrics_exporter.py deployment\\
-                    copy /Y requirements.txt deployment\\
+                sh '''
+                    mkdir -p deployment
+                    cp metrics_exporter.py requirements.txt deployment/
                 '''
 
-                archiveArtifacts artifacts: 'deployment/**', fingerprint: true
+                archiveArtifacts artifacts: 'deployment/**',
+                                 fingerprint: true
             }
         }
     }
@@ -49,7 +49,7 @@ pipeline {
         }
 
         failure {
-            echo 'Pipeline failed. Check the stage logs.'
+            echo 'Pipeline failed. Check stage logs.'
         }
     }
 }
