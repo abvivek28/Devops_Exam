@@ -16,15 +16,22 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo 'Installing Python dependencies'
-                sh 'python3 -m pip install -r requirements.txt'
+                echo 'Creating Python virtual environment'
+
+                sh '''
+                    python3 -m venv .venv
+                    .venv/bin/python -m pip install -r requirements.txt
+                '''
             }
         }
 
         stage('Test') {
             steps {
                 echo 'Running automated tests'
-                sh 'python3 -m unittest discover -s tests -v'
+
+                sh '''
+                    .venv/bin/python -m unittest discover -s tests -v
+                '''
             }
         }
 
